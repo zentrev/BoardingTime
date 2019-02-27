@@ -16,14 +16,29 @@ var personSchema = mongoose.Schema({
     species: String
 });
 
-var Person = mongoose.model("People_Collection", personSchema);
+var userSchema = mongoose.Schema({
+    userName: String,
+    password: String,
+    isAdmin: String,
+    avatar: String,
+    email: String,
+    age: String,
+});
+
+var messageSchema = mongoose.Schema({
+    owner: String,
+    date: String,
+    message: String,
+});
+
+var User = mongoose.model("Users", userSchema);
 
 exports.index = function(req,res){
-    Person.find(function(err, person){
+    User.find(function(err, user){
         if(err) return console.error(err);
         res.render("index", {
-            title: "People List",
-            people: person
+            title: "User List",
+            user: user
         });
     });
 }
@@ -31,50 +46,56 @@ exports.index = function(req,res){
 //CREATE
 exports.create = function(req,res){
     res.render("create", {
-        title: "Add Person"
+        title: "Add User"
     });
 }
 
-exports.createPerson = function(req,res){
-    var person = new Person({
-        name: req.body.name,
+exports.createUser = function(req,res){
+    var user = new User({
+        userName: req.body.userName,
+        password: req.body.password,
+        isAdmin: req.body.isAdmin,
+        avatar: req.body.avatar,
+        email: req.body.email,
         age: req.body.age,
-        species: req.body.species
     });
-    person.save(function(err, person){
+    user.save(function(err, user){
         if(err) return console.error(err);
-        console.log(person.name + " added");
+        console.log(user.userName + " added");
     });
     res.redirect("/");
 }
 
 //EDIT
 exports.edit = function(req,res){
-    Person.findById(req.params.id, function(err, person){
+    User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
         res.render("edit", {
-            title: "Edit Person",
-            person: person,
+            title: "Edit User",
+            user: user,
         });
     });
 }
 
-exports.editPerson = function(req,res){
-    Person.findById(req.params.id, function(err, person){
+exports.editUser = function(req,res){
+    User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
-        person.name = req.body.name;
-        person.age = req.body.age;
-        person.species = req.body.species;
-        person.save(function(err, person){
+        user.userName = req.body.userName;
+        user.password = req.body.password;
+        user.isAdmin = req.body.isAdmin;
+        user.avatar = req.body.avatar;
+        user.email = req.body.email;
+        user.age = req.body.age;
+        user.save(function(err, person){
             if(err) return console.error(err);
-            console.log(person.name + " Updated");
+            console.log(user.userName + " Updated");
         });
     });
     res.redirect("/");
 }
 
 exports.delete = function(req,res){
-    Person.findByIdAndRemove(req.params.id, function(err,person){
+    User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
         res.redirect("/");
     });

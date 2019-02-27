@@ -17,10 +17,10 @@ var urlencodedParser = bodyParser.urlencoded({
 app.get("/", route.index);
 
 app.get("/create", route.create);
-app.post("/create", urlencodedParser, route.createPerson);
+app.post("/create", urlencodedParser, route.createUser);
 
 app.get("/edit/:id", route.edit);
-app.post("/edit/:id", urlencodedParser, route.editPerson);
+app.post("/edit/:id", urlencodedParser, route.editUser);
 
 app.get("/delete/:id", route.delete);
 

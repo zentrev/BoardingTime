@@ -1,19 +1,25 @@
 extends layout
 block content
     form(id="form", method="post", action="/create")
-        lable Name:
-        input(type="text", name="name")
+        lable UserName:
+        input(type="text", name="userName")
+        br
+        lable Password:
+        input(type="text", name="password")
+        br
+        label Privlage:
+        select(name="isAdmin")
+            option(value="true") Admin
+            option(value="false") User
+        lable Avatar:
+        input(type="text", name="avatar")
+        br
+        lable Email:
+        input(type="text", name="email")
         br
         lable Age:
         input(type="text", name="age")
         br
-        label Species:
-        select(name="species")
-            option(value="Human") Human
-            option(value="Vampire") Vampire
-            option(value="Zombie") Zombie
-            option(value="Wereworlf") Wereworlf
-            option(value="Corpse") Corpse
-            option(value="Furry") Furry
+
         br
-        input(type="submit", value="Add Person")
+        input(type="submit", value="Add User")

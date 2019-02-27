@@ -1,20 +1,25 @@
 extends layout
 block content
-    form(id="form", method="post", action="/edit/" + person.id)
-        lable Name:
-        input(type="text", name="name", value = person.name)
+    form(id="form", method="post", action="/edit/" + user.id)
+        lable UserName:
+        input(type="text", name="userName", value = user.userName)
         br
-        lable Age:
-        input(type="text", name="age", value = person.age)
+        lable Password:
+        input(type="text", name="password", value = user.password)
         br
-        label Species:
-        select(name="species")
-            option(select = person.species) #{person.species}
-            option(value="Human") Human
-            option(value="Vampire") Vampire
-            option(value="Zombie") Zombie
-            option(value="Wereworlf") Wereworlf
-            option(value="Corpse") Corpse
-            option(value="Furry") Furry
+        label Privlage:
+        select(name="isAdmin")
+            option(select = user.isAdmin) #{user.isAdmin}
+            option(value="true") Admin
+            option(value="false") User
         br
-        input(type="submit", value="Update Person")
+        lable Avatar:
+        input(type="text", name="avatar", value = user.avatar)
+        br
+        lable email:
+        input(type="text", name="email", value = user.email)
+        br
+        lable age:
+        input(type="text", name="age", value = user.age)
+        br
+        input(type="submit", value="Update User")
