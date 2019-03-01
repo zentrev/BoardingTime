@@ -1,0 +1,10 @@
+extends layout
+block content
+    form(id="form", method="post", action="/login")
+        lable Username:
+        input(type="text", name="name")
+        br
+        lable Password:
+        input(type="text", name="age")
+        br
+        input(type="submit", value="Login")
