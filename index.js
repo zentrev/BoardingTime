@@ -16,13 +16,13 @@ var urlencodedParser = bodyParser.urlencoded({
 
 app.get("/", route.index);
 
-app.get("/create", route.create);
-app.post("/create", urlencodedParser, route.createUser);
+app.get("/createUser", route.createUserPage);
+app.post("/createUser", urlencodedParser, route.createUser);
 
-app.get("/edit/:id", route.edit);
-app.post("/edit/:id", urlencodedParser, route.editUser);
+app.get("/editUser/:id", route.editUserPage);
+app.post("/editUser/:id", urlencodedParser, route.editUser);
 
-app.get("/delete/:id", route.delete);
+app.get("/deleteUser/:id", route.deleteUser);
 
 app.get("/login", route.login);
 
