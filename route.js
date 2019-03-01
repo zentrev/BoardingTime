@@ -25,13 +25,14 @@ var userSchema = mongoose.Schema({
     age: String,
 });
 
-var messageSchema = mongoose.Schema({
+var PostSchema = mongoose.Schema({
     owner: String,
     date: String,
     message: String,
 });
 
 var User = mongoose.model("Users", userSchema);
+var Post = mongoose.model("Post", PostSchema);
 
 exports.index = function(req,res){
     User.find(function(err, user){
@@ -44,8 +45,8 @@ exports.index = function(req,res){
 }
 
 //CREATE
-exports.create = function(req,res){
-    res.render("create", {
+exports.createUserPage = function(req,res){
+    res.render("createUser", {
         title: "Add User"
     });
 }
@@ -67,10 +68,10 @@ exports.createUser = function(req,res){
 }
 
 //EDIT
-exports.edit = function(req,res){
+exports.editUserPage = function(req,res){
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
-        res.render("edit", {
+        res.render("editUser", {
             title: "Edit User",
             user: user,
         });
@@ -94,7 +95,7 @@ exports.editUser = function(req,res){
     res.redirect("/");
 }
 
-exports.delete = function(req,res){
+exports.deleteUser = function(req,res){
     User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
         res.redirect("/");
