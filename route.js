@@ -100,3 +100,15 @@ exports.delete = function(req,res){
         res.redirect("/");
     });
 }
+
+exports.login = function(req, res){
+    res.render("login", {
+        title: "User List",
+    });
+}
+
+exports.loginUser = function(req, res){
+    User.findById(req.params.id, function(err, user){
+        
+    });
+}
