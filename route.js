@@ -122,8 +122,6 @@ exports.loginUser = function(req, res){
         
     });
 }
-}
-
 
 exports.createPostPage = function(req,res){
     User.findById(req.params.id, function(err, user){
