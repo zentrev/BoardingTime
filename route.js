@@ -111,6 +111,19 @@ exports.deleteUser = function(req,res){
     });
 }
 
+exports.login = function(req, res){
+    res.render("login", {
+        title: "User List",
+    });
+}
+
+exports.loginUser = function(req, res){
+    User.findById(req.params.id, function(err, user){
+        
+    });
+}
+}
+
 
 exports.createPostPage = function(req,res){
     User.findById(req.params.id, function(err, user){

@@ -24,6 +24,8 @@ app.post("/editUser/:id", urlencodedParser, route.editUser);
 
 app.get("/deleteUser/:id", route.deleteUser);
 
+app.get("/login", route.login);
+
 app.get("/createPost/:id", route.createPostPage);
 app.post("/createPost/:id", urlencodedParser, route.createPost)
 
