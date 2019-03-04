@@ -24,4 +24,10 @@ app.post("/editUser/:id", urlencodedParser, route.editUser);
 
 app.get("/deleteUser/:id", route.deleteUser);
 
+app.get("/createPost/:id", route.createPostPage);
+app.post("/createPost/:id", urlencodedParser, route.createPost)
+
+app.get("/deletePost/:id", route.deletePost);
+
+
 app.listen(3000);

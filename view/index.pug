@@ -26,4 +26,26 @@ block content
                     a(href="/editUser/" + item.id) Edit
                 td 
                     a(href="/deleteUser/" + item.id) Delete
+                td 
+                    a(href="/createPost/" + item.id) Post
     a(href="/createUser") Add new user
+
+    table(class="gridtable")
+        tr
+            th ID
+            th Username
+            th Date
+            th Message
+            th
+            th
+        each item in post
+            tr
+                td 
+                    a(href="/details/" + item.id) #{item.id}
+                td 
+                    .script
+                        GetUser(post.owner).userName
+                td #{item.date}
+                td #{item.message}
+                td 
+                    a(href="/deletePost/" + item.id) Delete
