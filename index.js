@@ -27,7 +27,10 @@ app.get("/deleteUser/:id", route.deleteUser);
 app.get("/login", route.login);
 
 app.get("/createPost/:id", route.createPostPage);
-app.post("/createPost/:id", urlencodedParser, route.createPost)
+app.post("/createPost/:id", urlencodedParser, route.createPost);
+
+app.get("/editPost/:id", route.editPostPage);
+app.post("/editPost/:id", urlencodedParser, route.editPost);
 
 app.get("/deletePost/:id", route.deletePost);
 

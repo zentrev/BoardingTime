@@ -27,7 +27,9 @@ var userSchema = mongoose.Schema({
 var User = mongoose.model("Users", userSchema);
 
 var postSchema = mongoose.Schema({
-    owner: String,
+    ownerID: String,
+    ownerName: String,
+    ownerAvatar: String,
     date: String,
     message: String,
 });
@@ -45,7 +47,7 @@ exports.index = function(req,res){
         Post.find(function(err, post){
             if(err) return console.error(err);
             res.render("index", {
-                title: "User List",
+                title: "Database",
                 user: user,
                 post: post
             });
@@ -135,13 +137,42 @@ exports.createPostPage = function(req,res){
 
 exports.createPost = function(req,res){
     var post = new Post({
-        owner: req.body.owner,
+        ownerID: req.body.ownerID,
+        ownerName: req.body.ownerName,
+        ownerAvatar: req.body.ownerAvatar,
         date: req.body.date,
         message: req.body.message,
     });
     post.save(function(err, post){
         if(err) return console.error(err);
         console.log(GetUser(post.owner).userName + " Post");
+    });
+    res.redirect("/");
+}
+
+exports.editPostPage = function(req,res){
+    Post.findById(req.params.id, function(err, post){
+        if(err) return console.error(err);
+        res.render("editPost", {
+            title: "Edit Post",
+            post: post,
+        });
+    });
+}
+
+exports.editPost = function(req,res){
+    Post.findById(req.params.id, function(err, post){
+        if(err) return console.error(err);
+        post.ownerID = req.body.ownerID;
+        post.ownerName = req.body.ownerName;
+        post.ownerAvatar = req.body.ownerAvatar;
+        post.date = req.body.date;
+        post.message = req.body.message;
+        
+        post.save(function(err, post){
+            if(err) return console.error(err);
+            console.log(post.date + " Updated");
+        });
     });
     res.redirect("/");
 }

@@ -1,0 +1,19 @@
+extends layout
+block content
+    form(id="form", method="post", action="/editPost/" + post.id)
+        lable User:
+        input(type="text", name="ownerID", value = post.ownerID)
+        br
+        lable UserName:
+        input(type="text", name="ownerName", value = post.ownerName)
+        br
+        lable UserAvatar:
+        input(type="text", name="ownerAvatar", value = post.ownerAvatar)
+        br
+        lable Date:
+        input(type="text", name="date", value = post.date)
+        br
+        lable Message:
+        input(type="text", name="message", value = post.message)
+        br
+        input(type="submit", value="Update Post")
