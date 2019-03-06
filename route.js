@@ -92,6 +92,21 @@ exports.editUserPage = function(req,res){
 exports.editUser = function(req,res){
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
+
+        //Find user post and change data
+        Post.find(
+            { ownerID : user.id }
+         ).exec(function(err, results) {
+            for (var i in results){
+                results[i].ownerName = req.body.userName;
+                results[i].ownerAvatar = req.body.avatar;
+                results[i].save(function(err, post){
+                    if(err) return console.error(err);
+                    console.log(post.date + " Updated");
+                });
+            }
+        });
+        
         user.userName = req.body.userName;
         user.password = req.body.password;
         user.isAdmin = req.body.isAdmin;
@@ -107,6 +122,24 @@ exports.editUser = function(req,res){
 }
 
 exports.deleteUser = function(req,res){
+    User.findById(req.params.id, function(err, user){
+        if(err) return console.error(err);
+
+        //Find user post and change data
+        Post.find(
+            { ownerID : user.id }
+        ).exec(function(err, results) {
+            for (var i in results){
+                results[i].ownerName = "Redacted";
+                results[i].ownerAvatar = "RedactedAvi";
+                results[i].save(function(err, post){
+                    if(err) return console.error(err);
+                    console.log(post.date + " Updated");
+                });
+            }
+        });
+    });
+
     User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
         res.redirect("/");
