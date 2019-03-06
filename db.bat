@@ -1,1 +1,0 @@
-"C:\Program Files\MongoDB\Server\4.0\bin\mongod.exe" --dbpath "C:\Users\Zektic\Desktop\MTM282\NodeJS\mongo-demo\data"

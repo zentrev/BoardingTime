@@ -34,4 +34,13 @@ app.post("/login", urlencodedParser, route.login);
 //     saveUninitialized: false
 // }));
 
+app.get("/createPost/:id", route.createPostPage);
+app.post("/createPost/:id", urlencodedParser, route.createPost);
+
+app.get("/editPost/:id", route.editPostPage);
+app.post("/editPost/:id", urlencodedParser, route.editPost);
+
+app.get("/deletePost/:id", route.deletePost);
+
+
 app.listen(3000);

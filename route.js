@@ -25,22 +25,33 @@ var userSchema = mongoose.Schema({
     email: String,
     age: String,
 });
+var User = mongoose.model("Users", userSchema);
 
-var PostSchema = mongoose.Schema({
-    owner: String,
+var postSchema = mongoose.Schema({
+    ownerID: String,
+    ownerName: String,
+    ownerAvatar: String,
     date: String,
     message: String,
 });
 
-var User = mongoose.model("Users", userSchema);
-var Post = mongoose.model("Post", PostSchema);
+var Post = mongoose.model("Post", postSchema);
+
+function GetUser(id)
+{
+    return User.findById(id);
+}
 
 exports.index = function(req,res){
     User.find(function(err, user){
         if(err) return console.error(err);
-        res.render("index", {
-            title: "User List",
-            user: user
+        Post.find(function(err, post){
+            if(err) return console.error(err);
+            res.render("index", {
+                title: "Database",
+                user: user,
+                post: post
+            });
         });
     });
 }
@@ -82,13 +93,28 @@ exports.editUserPage = function(req,res){
 exports.editUser = function(req,res){
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
+
+        //Find user post and change data
+        Post.find(
+            { ownerID : user.id }
+         ).exec(function(err, results) {
+            for (var i in results){
+                results[i].ownerName = req.body.userName;
+                results[i].ownerAvatar = req.body.avatar;
+                results[i].save(function(err, post){
+                    if(err) return console.error(err);
+                    console.log(post.date + " Updated");
+                });
+            }
+        });
+        
         user.userName = req.body.userName;
         user.password = req.body.password;
         user.isAdmin = req.body.isAdmin;
         user.avatar = req.body.avatar;
         user.email = req.body.email;
         user.age = req.body.age;
-        user.save(function(err, person){
+        user.save(function(err, user){
             if(err) return console.error(err);
             console.log(user.userName + " Updated");
         });
@@ -97,6 +123,24 @@ exports.editUser = function(req,res){
 }
 
 exports.deleteUser = function(req,res){
+    User.findById(req.params.id, function(err, user){
+        if(err) return console.error(err);
+
+        //Find user post and change data
+        Post.find(
+            { ownerID : user.id }
+        ).exec(function(err, results) {
+            for (var i in results){
+                results[i].ownerName = "Redacted";
+                results[i].ownerAvatar = "RedactedAvi";
+                results[i].save(function(err, post){
+                    if(err) return console.error(err);
+                    console.log(post.date + " Updated");
+                });
+            }
+        });
+    });
+
     User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
         res.redirect("/");
@@ -157,3 +201,62 @@ userSchema.pre('save', function (next) {
       next();
     })
   });
+exports.createPostPage = function(req,res){
+    User.findById(req.params.id, function(err, user){
+        if(err) return console.error(err);
+        res.render("createPost", {
+            title: "Create Post",
+            user: user,
+        });
+    });
+}
+
+exports.createPost = function(req,res){
+    var post = new Post({
+        ownerID: req.body.ownerID,
+        ownerName: req.body.ownerName,
+        ownerAvatar: req.body.ownerAvatar,
+        date: req.body.date,
+        message: req.body.message,
+    });
+    post.save(function(err, post){
+        if(err) return console.error(err);
+        console.log(GetUser(post.owner).userName + " Post");
+    });
+    res.redirect("/");
+}
+
+exports.editPostPage = function(req,res){
+    Post.findById(req.params.id, function(err, post){
+        if(err) return console.error(err);
+        res.render("editPost", {
+            title: "Edit Post",
+            post: post,
+        });
+    });
+}
+
+exports.editPost = function(req,res){
+    Post.findById(req.params.id, function(err, post){
+        if(err) return console.error(err);
+        post.ownerID = req.body.ownerID;
+        post.ownerName = req.body.ownerName;
+        post.ownerAvatar = req.body.ownerAvatar;
+        post.date = req.body.date;
+        post.message = req.body.message;
+        
+        post.save(function(err, post){
+            if(err) return console.error(err);
+            console.log(post.date + " Updated");
+        });
+    });
+    res.redirect("/");
+}
+
+exports.deletePost = function(req,res){
+    Post.findByIdAndRemove(req.params.id, function(err, post){
+        if(err) return console.error(err);
+        res.redirect("/");
+    });
+}
+   

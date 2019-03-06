@@ -1,0 +1,20 @@
+extends layout
+block content
+    form(id="form", method="post", action="/createPost/" + user.id)
+        lable UserID:
+        input(type="text", name="ownerID", value = user.id)
+        br
+        lable UserName:
+        input(type="text", name="ownerName", value = user.userName)
+        br
+        lable UserAvi:
+        input(type="text", name="ownerAvatar", value = user.avatar)
+        br
+        lable Date:
+        input(type="text", name="date")
+        br
+        lable Content:
+        input(type="text", name="message")
+        br
+
+        input(type="submit", value="Create Post")
