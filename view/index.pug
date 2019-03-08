@@ -10,8 +10,6 @@ block content
             th avatar
             th Email
             th Age
-            th
-            th
         each item in user
             tr
                 td 
@@ -26,4 +24,4 @@ block content
                     a(href="/editUser/" + item.id) Edit
                 td 
                     a(href="/deleteUser/" + item.id) Delete
-    a(href="/createUser") Add new user
+    a(href="/createUser", class="button") Add new user
