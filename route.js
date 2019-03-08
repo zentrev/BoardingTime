@@ -48,6 +48,19 @@ exports.index = function(req,res){
             if(err) return console.error(err);
             res.render("index", {
                 title: "Database",
+                post: post.reverse()
+            });
+        });
+    });
+}
+
+exports.data = function(req,res){
+    User.find(function(err, user){
+        if(err) return console.error(err);
+        Post.find(function(err, post){
+            if(err) return console.error(err);
+            res.render("data", {
+                title: "Database",
                 user: user,
                 post: post
             });
@@ -75,7 +88,7 @@ exports.createUser = function(req,res){
         if(err) return console.error(err);
         console.log(user.userName + " added");
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 //EDIT
@@ -95,7 +108,7 @@ exports.editUser = function(req,res){
 
         //Find user post and change data
         Post.find(
-            { ownerID : user.id }
+            { ownerID : user.id },
          ).exec(function(err, results) {
             for (var i in results){
                 results[i].ownerName = req.body.userName;
@@ -118,10 +131,11 @@ exports.editUser = function(req,res){
             console.log(user.userName + " Updated");
         });
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 exports.deleteUser = function(req,res){
+    console.log(req.params);
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
 
@@ -142,7 +156,7 @@ exports.deleteUser = function(req,res){
 
     User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
-        res.redirect("/");
+        res.redirect("/" +  req.params.page);
     });
 }
 
@@ -173,14 +187,14 @@ exports.createPost = function(req,res){
         ownerID: req.body.ownerID,
         ownerName: req.body.ownerName,
         ownerAvatar: req.body.ownerAvatar,
-        date: req.body.date,
+        date: new Date(Date.now()).toLocaleString(),
         message: req.body.message,
     });
     post.save(function(err, post){
         if(err) return console.error(err);
         console.log(GetUser(post.owner).userName + " Post");
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 exports.editPostPage = function(req,res){
@@ -213,7 +227,7 @@ exports.editPost = function(req,res){
 exports.deletePost = function(req,res){
     Post.findByIdAndRemove(req.params.id, function(err, post){
         if(err) return console.error(err);
-        res.redirect("/");
+        res.redirect("/data");
     });
 }
    

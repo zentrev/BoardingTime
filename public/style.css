@@ -29,3 +29,7 @@ table.gridtable td{
     border-color: #559;
     background: #fff;
 }
+
+.post{
+    border: 2px solid black;
+}

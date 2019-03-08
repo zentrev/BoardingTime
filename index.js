@@ -15,6 +15,9 @@ var urlencodedParser = bodyParser.urlencoded({
 })
 
 app.get("/", route.index);
+app.get("/index", route.index);
+
+app.get("/data", route.data);
 
 app.get("/createUser", route.createUserPage);
 app.post("/createUser", urlencodedParser, route.createUser);
@@ -22,7 +25,7 @@ app.post("/createUser", urlencodedParser, route.createUser);
 app.get("/editUser/:id", route.editUserPage);
 app.post("/editUser/:id", urlencodedParser, route.editUser);
 
-app.get("/deleteUser/:id", route.deleteUser);
+app.get("/deleteUser/:page-:id", route.deleteUser);
 
 app.get("/login", route.login);
 
