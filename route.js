@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var bCrypt = require("bcrypt-nodejs");
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/data", {
     useNewUrlParser: true
@@ -160,18 +161,60 @@ exports.deleteUser = function(req,res){
     });
 }
 
+exports.loginPage = function(req, res){
+        res.render("login", {
+            title: "User List",
+    });
+}
+
 exports.login = function(req, res){
-    res.render("login", {
-        title: "User List",
+    User.findOne(
+        {userName: req.body.userName},
+        {password: req.body.password}
+        ).exec(function(err, _user){
+        if(err) return console.log(err);
+        console.log(_user);
+        User.findById(_user.id, function(err, user){
+            if(err) return console.log(err);
+            if(user.userName === req.body.userName && user.password === req.body.password){
+                console.log("Logged in");
+            }
+        })
+    });
+    res.redirect("/");
+}
+
+userSchema.statics.authenticate = function(userName, password, callback){
+    User.findOne({userName: userName}).exec(function(err, user){
+        if(err) {
+            return callback(err)
+        }
+        else if(!user){
+            var err = new Error("User not found");
+            err.status = 401;
+            return callback(err);
+        }
+        bCrypt.compare(password, user.password, function(err, result){
+            if(result === true){
+                return callback(null, user);
+            }
+            else{
+                return callback();
+            }
+        })
     });
 }
 
-exports.loginUser = function(req, res){
-    User.findById(req.params.id, function(err, user){
-        
-    });
-}
-
+userSchema.pre('save', function (next) {
+    var user = this;
+    bcrypt.hash(user.password, 10, function (err, hash){
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      next();
+    })
+  });
 exports.createPostPage = function(req,res){
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
