@@ -256,7 +256,6 @@ exports.editPost = function(req,res){
         post.ownerID = req.body.ownerID;
         post.ownerName = req.body.ownerName;
         post.ownerAvatar = req.body.ownerAvatar;
-        post.date = req.body.date;
         post.message = req.body.message;
         
         post.save(function(err, post){
