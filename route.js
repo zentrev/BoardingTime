@@ -1,5 +1,8 @@
 var mongoose = require("mongoose");
 var bCrypt = require("bcrypt-nodejs");
+var http = require('http');
+var fs = require('fs');
+
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/data", {
     useNewUrlParser: true
@@ -48,7 +51,7 @@ exports.index = function(req,res){
         Post.find(function(err, post){
             if(err) return console.error(err);
             res.render("index", {
-                title: "Database",
+                title: "Posting Board",
                 post: post.reverse()
             });
         });
@@ -81,10 +84,18 @@ exports.createUser = function(req,res){
         userName: req.body.userName,
         password: req.body.password,
         isAdmin: req.body.isAdmin,
-        avatar: req.body.avatar,
+        avatar: "",
         email: req.body.email,
         age: req.body.age,
     });
+
+    const file = fs.createWriteStream("./public/profiles/" + user.id + ".jpg");
+    const request = http.get("http://api.adorable.io/avatars/face/eyes4/nose3/mouth7/8e8895", function(response) {
+        response.pipe(file);
+    });
+
+    user.avatar = user.id + ".jpg";
+
     user.save(function(err, user){
         if(err) return console.error(err);
         console.log(user.userName + " added");
@@ -124,7 +135,6 @@ exports.editUser = function(req,res){
         user.userName = req.body.userName;
         user.password = req.body.password;
         user.isAdmin = req.body.isAdmin;
-        user.avatar = req.body.avatar;
         user.email = req.body.email;
         user.age = req.body.age;
         user.save(function(err, user){

@@ -5,6 +5,7 @@ var route = require("./route.js");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 
+
 var app = express();
 
 app.set("view engine", "pug");
@@ -13,7 +14,8 @@ app.use(express.static(path.join(__dirname+"/public")));
 
 var urlencodedParser = bodyParser.urlencoded({
     extended: true
-})
+});
+
 
 app.get("/", route.index);
 app.get("/index", route.index);

@@ -9,6 +9,6 @@ block content
             if(item.ownerID == "5c76dbf6df52e41a58ef8d75")
                 a(href="/deletePost/" + item.id) delete
             p #{item.ownerName}
-            p #{item.ownerAvatar}
+            img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
             p #{item.date}
             p #{item.message}
