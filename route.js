@@ -27,6 +27,7 @@ var userSchema = mongoose.Schema({
     avatar: String,
     email: String,
     age: String,
+    postCount: String,
 });
 var User = mongoose.model("Users", userSchema);
 
@@ -87,6 +88,7 @@ exports.createUser = function(req,res){
         avatar: "",
         email: req.body.email,
         age: req.body.age,
+        postCount: 0
     });
 
     const file = fs.createWriteStream("./public/profiles/" + user.id + ".jpg");
@@ -153,7 +155,7 @@ exports.deleteUser = function(req,res){
         //Find user post and change data
         Post.find(
             { ownerID : user.id }
-        ).exec(function(err, results) {
+            ).exec(function(err, results) {
             for (var i in results){
                 results[i].ownerName = "Redacted";
                 results[i].ownerAvatar = "RedactedAvi";
@@ -236,6 +238,14 @@ exports.createPostPage = function(req,res){
 }
 
 exports.createPost = function(req,res){
+    User.findById(req.body.ownerID, function(err, user){
+        user.postCount = parseInt(user.postCount) + 1;
+        console.log(user.postCount);
+        user.save(function(err, user){
+            if(err) return console.log(err);
+        });
+    });
+
     var post = new Post({
         ownerID: req.body.ownerID,
         ownerName: req.body.ownerName,
@@ -245,7 +255,6 @@ exports.createPost = function(req,res){
     });
     post.save(function(err, post){
         if(err) return console.error(err);
-        console.log(GetUser(post.owner).userName + " Post");
     });
     res.redirect("/data");
 }
@@ -279,6 +288,14 @@ exports.editPost = function(req,res){
 exports.deletePost = function(req,res){
     Post.findByIdAndRemove(req.params.id, function(err, post){
         if(err) return console.error(err);
+        User.findById(post.ownerID, function(err, user){
+            if(err) return console.err(err);
+            user.postCount = parseInt(user.postCount) - 1;
+            user.save(function(err, user){
+                if(err) console.log(err);
+                console.log(user.postCount);
+            });
+        });
         res.redirect("/data");
     });
 }
