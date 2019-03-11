@@ -1,25 +1,30 @@
 extends layout
 block content
     form(id="form", method="post", action="/createUser")
-        lable UserName:
-        input(type="text", name="userName")
-        br
-        lable Password:
-        input(type="text", name="password")
-        br
-        label Privlage:
-        select(name="isAdmin")
-            option(value="true") Admin
-            option(value="false") User
-        lable Avatar:
-        input(type="text", name="avatar")
-        br
-        lable Email:
-        input(type="text", name="email")
-        br
-        lable Age:
-        input(type="text", name="age")
+        label UserName:
+        input(class="textBox", type="text", name="userName")
         br
 
+        label Password:
+        input(class="textBox", type="text", name="password")
         br
-        input(type="submit", value="Add User")
+
+        label Avatar:
+        input(class="textBox", type="text", name="avatar")
+        br
+
+        label Email:
+        input(class="textBox", type="text", name="email")
+        br
+
+        label Age:
+        input(class="textBox", type="text", name="age")
+        br
+
+        label Privilege:
+        select(class="textBox", name="isAdmin")
+            option(value="true") Admin
+            option(value="false") User
+        br
+
+        input(class="textBox", type="submit", value="Add User")

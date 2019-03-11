@@ -1,17 +1,17 @@
 extends layout
 block content
     form(id="form", method="post", action="/createPost/" + user.id)
-        lable UserID:
-        input(type="text", name="ownerID", value = user.id)
+        label UserID:
+        input(class="textBox", type="text", name="ownerID", value = user.id)
         br
-        lable UserName:
-        input(type="text", name="ownerName", value = user.userName)
+        label UserName:
+        input(class="textBox", type="text", name="ownerName", value = user.userName)
         br
-        lable UserAvi:
-        input(type="text", name="ownerAvatar", value = user.avatar)
+        label UserAvi:
+        input(class="textBox", type="text", name="ownerAvatar", value = user.avatar)
         br
-        lable Content:
-        input(type="text", name="message")
+        label Content:
+        input(class="textBox", type="text", name="message")
         br
 
-        input(type="submit", value="Create Post")
+        input(class="textBox", type="submit", value="Create Post")
