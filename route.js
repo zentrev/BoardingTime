@@ -48,7 +48,8 @@ exports.index = function(req,res){
             if(err) return console.error(err);
             res.render("index", {
                 title: "Posting Board",
-                post: post.reverse()
+                post: post.reverse(),
+                session: req.session
             });
         });
     });
@@ -202,8 +203,8 @@ exports.login = (req, res) =>{
                 console.log("login");
                 req.session.user={
                     isAuthenticated: true,
-                    userID: account.userID,
-                    username: account.userName,
+                    userID: account.id,
+                    userName: account.userName,
                     isAdmin: account.isAdmin
                 };
                 res.redirect('/private');
@@ -244,18 +245,19 @@ exports.createPost = function(req,res){
         user.save(function(err, user){
             if(err) return console.log(err);
         });
+
+        var post = new Post({
+            ownerID: user.id,
+            ownerName: user.userName,
+            ownerAvatar: user.avatar,
+            date: new Date(Date.now()).toLocaleString(),
+            message: req.body.message,
+        });
+        post.save(function(err, post){
+            if(err) return console.error(err);
+        });
     });
 
-    var post = new Post({
-        ownerID: req.body.ownerID,
-        ownerName: req.body.ownerName,
-        ownerAvatar: req.body.ownerAvatar,
-        date: new Date(Date.now()).toLocaleString(),
-        message: req.body.message,
-    });
-    post.save(function(err, post){
-        if(err) return console.error(err);
-    });
     res.redirect("/data");
 }
 
@@ -272,9 +274,6 @@ exports.editPostPage = function(req,res){
 exports.editPost = function(req,res){
     Post.findById(req.params.id, function(err, post){
         if(err) return console.error(err);
-        post.ownerID = req.body.ownerID;
-        post.ownerName = req.body.ownerName;
-        post.ownerAvatar = req.body.ownerAvatar;
         post.message = req.body.message;
         
         post.save(function(err, post){

@@ -1,15 +1,6 @@
 extends layout
 block content
     form(id="form", method="post", action="/editPost/" + post.id)
-        label User:
-        input(class="textBox", type="text", name="ownerID", value = post.ownerID)
-        br
-        label UserName:
-        input(class="textBox", type="text", name="ownerName", value = post.ownerName)
-        br
-        label UserAvatar:
-        input(class="textBox", type="text", name="ownerAvatar", value = post.ownerAvatar)
-        br
         label Message:
         input(class="textBox", type="text", name="message", value = post.message)
         br

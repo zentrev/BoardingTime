@@ -1,14 +1,19 @@
 extends layout
 
 block content
-    a(href="/data", class="button") data
+    if(session.user != null)
+        p Session = #{session.user.userName}
+        if(session.user.isAdmin == 'true')
+            a(href="/data", class="button") data
     each item in post
         div(class="post")
-            if(item.ownerID == "5c76dbf6df52e41a58ef8d75")
+        if(session.user != null)
+            if(item.ownerID == session.user.userID)
                 a(href="/editPost/" + item.id) Edit
-            if(item.ownerID == "5c76dbf6df52e41a58ef8d75")
+            if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
                 a(href="/deletePost/" + item.id) delete
-            p #{item.ownerName}
-            img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
-            p #{item.date}
-            p #{item.message}
+        p #{item.ownerID}
+        p #{item.ownerName}
+        img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
+        p #{item.date}
+        p #{item.message}
