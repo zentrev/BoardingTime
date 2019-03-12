@@ -98,12 +98,6 @@ exports.createUser = function(req,res){
     res.redirect("/data");
 }
 
-function ComparePassword(pass, hash){
-    bCrypt.compare(pass, hash, function(err, res){
-        console.log(pass, hash);
-    });
-}
-
 //EDIT
 exports.editUserPage = function(req,res){
     User.findById(req.params.id, function(err, user){
