@@ -10,7 +10,18 @@ block content
         br
 
         label Avatar:
-        input(class="textBox", type="text", name="avatar", value = user.avatar)
+        select(class="textBox", name="eyes")
+            each item in face.eyes
+                option(value=item) #{item}
+                
+        select(class="textBox", name="nose")
+            each item in face.nose
+                option(value=item) #{item}
+
+        select(class="textBox", name="mouth")
+            each item in face.mouth
+                option(value=item) #{item}
+        input(type="color", name="color")
         br
 
         label email:
@@ -20,17 +31,19 @@ block content
         label age:
         input(class="textBox", type="text", name="age", value = user.age)
         br
-
-        if(user.isAdmin)
-            label Privlage:
-            select(class="textBox", name="isAdmin")
-                option(select = user.isAdmin) #{user.isAdmin}
-                option(value="true") Admin
-                option(value="false") User
-            br
+        if(session.user != null)
+            if(session.user.isAdmin == 'true')
+                label Privlage:
+                select(class="textBox", name="isAdmin")
+                    option(select = user.isAdmin) #{user.isAdmin}
+                    option(value="true") Admin
+                    option(value="false") User
+                br
 
         lable email:
         input(type="text", name="email", value = user.email)
         br
         lable age:
         input(type="text", name="age", value = user.age)
+
+        input(class="textBox", type="submit", value="Change User")

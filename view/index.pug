@@ -1,8 +1,10 @@
 extends layout
 
 block content
+
     if(session.user != null)
         p Session = #{session.user.userName}
+        <script src="excanvas.js"></script>
         if(session.user.isAdmin == 'true')
             a(href="/data", class="button") data
     each item in post
@@ -17,3 +19,7 @@ block content
         img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
         p #{item.date}
         p #{item.message}
+
+    p(id="users") #{user}
+    canvas(id="canvasId")
+    <script src="barGraph.js"></script>
