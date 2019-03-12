@@ -14,11 +14,12 @@ block content
                 a(href="/editPost/" + item.id) Edit
             if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
                 a(href="/deletePost/" + item.id) delete
-        p #{item.ownerID}
-        p #{item.ownerName}
-        img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
-        p #{item.date}
-        p #{item.message}
+        div(class="postTableInfo")
+            p(id="postInfo") #{item.ownerID}
+            p(id="postInfo") #{item.ownerName}
+            p(id="postInfo") #{item.date}
+            p(id="postInfo") #{item.message}
+            img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
 
     p(id="users") #{user}
     canvas(id="canvasId")
