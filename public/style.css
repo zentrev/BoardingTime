@@ -96,3 +96,8 @@ label
     box-shadow: 5px 5px 5px rgb(0, 0, 0); 
     text-align: center;
 }
+
+#canvasId
+{
+    background-color: aquamarine;
+}

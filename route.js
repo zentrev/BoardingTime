@@ -1,5 +1,8 @@
 var mongoose = require("mongoose");
 var bCrypt = require("bcrypt-nodejs");
+var fs = require('fs');
+var http = require('http');
+
 var expressSession = require("express-session");
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/data", {
@@ -49,7 +52,8 @@ exports.index = function(req,res){
             res.render("index", {
                 title: "Posting Board",
                 post: post.reverse(),
-                session: req.session
+                session: req.session,
+                user: JSON.stringify(user)
             });
         });
     });
@@ -72,8 +76,10 @@ exports.data = function(req,res){
 
 //CREATE
 exports.createUserPage = function(req,res){
+    console.log(JSON.parse(fs.readFileSync('public/Face.json', 'utf8')));
     res.render("createUser", {
-        title: "Add User"
+        title: "Add User",
+        face: JSON.parse(fs.readFileSync('public/Face.json', 'utf8'))
     });
 }
 
@@ -82,11 +88,19 @@ exports.createUser = function(req,res){
         userName: req.body.userName,
         password: req.body.password,
         isAdmin: false,
-        avatar: "",
+        avatar: "http://api.adorable.io/avatars/face/" + req.body.eyes +"/"+ req.body.nose + "/" + req.body.mouth +"/" + req.body.color.substring(1),
         email: req.body.email,
         age: req.body.age,
         postCount: 0
     });
+
+    const file = fs.createWriteStream("./public/profiles/" + user.id + ".jpg");
+    const request = http.get(user.avatar, function(response) {
+        response.pipe(file);
+    });
+
+    user.avatar = user.id + ".jpg";
+
     bCrypt.hash(req.body.password, null, null, function(err, hash){
         user.password = hash;
 
@@ -111,6 +125,8 @@ exports.editUserPage = function(req,res){
         res.render("editUser", {
             title: "Edit User",
             user: user,
+            session: req.session,
+            face: JSON.parse(fs.readFileSync('public/Face.json', 'utf8'))
         });
     });
 }
@@ -125,12 +141,16 @@ exports.editUser = function(req,res){
          ).exec(function(err, results) {
             for (var i in results){
                 results[i].ownerName = req.body.userName;
-                results[i].ownerAvatar = req.body.avatar;
                 results[i].save(function(err, post){
                     if(err) return console.error(err);
                     console.log(post.date + " Updated");
                 });
             }
+        });
+
+         const file = fs.WriteStream("./public/profiles/" + user.id + ".jpg");
+         const request = http.get("http://api.adorable.io/avatars/face/" + req.body.eyes +"/"+ req.body.nose + "/" + req.body.mouth +"/" + req.body.color.substring(1), function(response) {
+             response.pipe(file);
         });
         
         user.userName = req.body.userName;
@@ -287,14 +307,17 @@ exports.editPost = function(req,res){
 exports.deletePost = function(req,res){
     Post.findByIdAndRemove(req.params.id, function(err, post){
         if(err) return console.error(err);
-        User.findById(post.ownerID, function(err, user){
-            if(err) return console.err(err);
-            user.postCount = parseInt(user.postCount) - 1;
-            user.save(function(err, user){
-                if(err) console.log(err);
-                console.log(user.postCount);
+        if(post.ownerName != "Redacted")
+        {
+            User.findById(post.ownerID, function(err, user){
+                if(err) return console.err(err);
+                user.postCount = parseInt(user.postCount) - 1;
+                user.save(function(err, user){
+                    if(err) console.log(err);
+                    console.log(user.postCount);
+                });
             });
-        });
+        }
         res.redirect("/data");
     });
 }
