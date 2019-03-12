@@ -2,27 +2,32 @@ extends layout
 
 block content
     if(session.user != null)
-        p Session = #{session.user.userName}
-        a(href="/logout", class="button") Logout
-        a(href="/editUser/" + session.user.userID, class="button") Edit Profile
-        a(href="/createPost/" + session.user.userID, class="button") Make Post
-        if(session.user.isAdmin == 'true')
-            a(href="/data", sclass="button") data
+        //- p Session = #{session.user.userName}
+        div(class="topBar")
+            a(href="/logout", class="topButton") Logout
+            a(href="/editUser/" + session.user.userID, class="topButton") Edit Profile
+            a(href="/createPost/" + session.user.userID, class="topButton") Make Post
+            if(session.user.isAdmin == 'true')
+                a(href="/data", class="topButton") Data
     else
         a(href="/login", class="button") Login
     each item in post
-        div(class="post")
-        if(session.user != null)
-            if(item.ownerID == session.user.userID)
-                a(href="/editPost/" + item.id, class="button") Edit
-            if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
-                a(href="/deletePost/" + item.id) delete
-        div(class="postTableInfo")
-            p(id="postInfo") #{item.ownerID}
-            p(id="postInfo") #{item.ownerName}
-            p(id="postInfo") #{item.date}
-            p(id="postInfo") #{item.message}
-            img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
+        
+        div(class="container")
+            div(class="postTableInfo")
+                p(class="postInfo") #{item.ownerID}
+                p(class="postInfo") #{item.ownerName}
+                p(class="postInfo") #{item.date}
+                img(class="postImg", src="profiles/" + item.ownerAvatar, alt=item.ownerName)
+            div(class="postMessage")
+                div(class="test")
+                    p(class="postInfo") #{item.message}
+                div(class="postButtonDiv")
+                    if(session.user != null)
+                        if(item.ownerID == session.user.userID)
+                            a(href="/editPost/" + item.id, class="postButton") Edit
+                        if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
+                            a(href="/deletePost/" + item.id, class="postButton") Delete
 
     p(id="users") #{user}
     canvas(id="canvasId")

@@ -4,14 +4,17 @@ html{
 
 body{
     padding: 20px;
+    margin: 0;
     background-image: url("loginBackground.png");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 100%;
+    background-size: cover;
+    border: 3px solid #fff;
     border-radius: 25px;
 }
 
 h3{
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     color: rgb(130, 220, 223);
 }
@@ -30,6 +33,7 @@ table.gridtable th{
     border-color: #559;
     background: #ccf;
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 table.gridtable td{
@@ -39,14 +43,12 @@ table.gridtable td{
     border-color: #559;
     background: #fff;
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.post{
-    border: 2px solid black;
-}
-
-form
+#form
 {
+    font-family: Arial, Helvetica, sans-serif;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -57,6 +59,7 @@ form
 
 .textBox
 {
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     display: block;
     margin-left: auto;
@@ -75,8 +78,26 @@ label
     width: 75%;
 }
 
+.topBar{
+    display: flex;
+    padding: 10px;
+    border: 0px solid #fff;
+}
+.topButton{
+    font-family: Arial, Helvetica, sans-serif;
+    flex: 1;
+    text-align: center;
+    background: #ccf;
+    border: 1px solid #559;
+    border-radius: 25px;
+    height: 5%;
+    padding: 8px;
+    margin: 0 auto;
+}
+
 .button
 {
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
     width: 75%;
     display: table-cell;
@@ -91,28 +112,69 @@ label
 
 .post
 {
-    background: white;
-    border-radius: 25px;
-    box-shadow: 5px 5px 5px rgb(0, 0, 0); 
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #fff;
 }
 
 #canvasId
 {
-    background-color: aquamarine;
+    background-color: #616161;
+   
+
 }
 
-#postTableInfo{
-    border-radius: 25px;
-    border-color: black;
+.container{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #fff;
 }
 
-#postInfo{
+.postTableInfo{
+    border: 2px solid #fff;
+    flex: 0.2;
+    background: #388AA0;
+}
+
+.postInfo{
+    font-family: Arial, Helvetica, sans-serif;
     text-align: left;
     border-radius: 10px;
     border: #fff;
+    padding: 1px;
+}
 
-    background-color: #2d2d2d;
+.postImg{
+    width: 50%;
+}
+
+.postMessage{
+    font-family: Arial, Helvetica, sans-serif;
+    flex: 2;
+    display: flex;
+    background: #388AA0;
+    flex-direction: row;
+}
+.test{
+    flex: 2;
+}
+
+.postButtonDiv{
+    background: #388AA0;
+    margin: 10px;
+    padding: 2px;
+    flex: 0.2;
+}
+
+.postButton{
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    background: #ccf;
+    border: 1px solid #559;
+    border-radius: 25px;
+    height: 5%;
+    padding: 8px;
+    margin: 1px;
 }
 
 #users{
