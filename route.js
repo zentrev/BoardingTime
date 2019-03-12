@@ -95,7 +95,7 @@ exports.createUser = function(req,res){
     });
 
     const file = fs.createWriteStream("./public/profiles/" + user.id + ".jpg");
-    const request = http.get(user.avatar, function(response) {
+    const request = http.get("http://api.adorable.io/avatars/face/" + req.body.eyes +"/"+ req.body.nose + "/" + req.body.mouth +"/" + req.body.color.substring(1), function(response) {
         response.pipe(file);
     });
 
@@ -227,7 +227,7 @@ exports.login = (req, res) =>{
                     userName: account.userName,
                     isAdmin: account.isAdmin
                 };
-                res.redirect('/private');
+                res.redirect('/index');
             }
             else{
                 res.render('login',{

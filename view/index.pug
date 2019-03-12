@@ -4,16 +4,20 @@ block content
 
     if(session.user != null)
         p Session = #{session.user.userName}
-        <script src="excanvas.js"></script>
+        a(href="/logout", class="button") Logout
+        a(href="/editUser/" + session.user.userID, class="button") Edit Profile
+
         if(session.user.isAdmin == 'true')
-            a(href="/data", class="button") data
+            a(href="/data", sclass="button") data
+    else
+        a(href="/login", class="button") Login
     each item in post
         div(class="post")
         if(session.user != null)
             if(item.ownerID == session.user.userID)
                 a(href="/editPost/" + item.id) Edit
             if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
-                a(href="/deletePost/" + item.id) delete
+                a(href="/deletePost/data-" + item.id) delete
         p #{item.ownerID}
         p #{item.ownerName}
         img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
