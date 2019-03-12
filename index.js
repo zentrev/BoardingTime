@@ -15,7 +15,8 @@ app.use(express.static(path.join(__dirname+"/public")));
 app.use(expressSession({
     secret: 'Working',
     saveUninitialized: false,
-    resave: true
+    resave: true,
+    cookie: { secure: false }
 }));
 
 var urlencodedParser = bodyParser.urlencoded({
@@ -37,7 +38,18 @@ app.post("/login", urlencodedParser, route.login);
 
 app.get("/private", route.checkAuth, function(req, res){
     res.render('private');
+    
   });
+
+app.get('/logout', function(req, res){
+  req.session.destroy(function(err){
+    if(err){
+      console.log(err);
+    }else{
+      res.redirect('/');
+    }
+  });
+});
 
 app.get("/createPost/:id", route.createPostPage);
 app.post("/createPost/:id", urlencodedParser, route.createPost);

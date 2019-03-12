@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    p Session = #{session.user.username}
     table(class="gridtable")
         tr
             th ID

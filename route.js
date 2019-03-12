@@ -44,6 +44,8 @@ function GetUser(id)
 }
 
 exports.index = function(req,res){
+    console.log(req.session);
+
     User.find(function(err, user){
         if(err) return console.error(err);
         Post.find(function(err, post){
@@ -51,7 +53,8 @@ exports.index = function(req,res){
             res.render("index", {
                 title: "Database",
                 user: user,
-                post: post
+                post: post,
+                session: req.session
             });
         });
     });
@@ -161,6 +164,7 @@ exports.deleteUser = function(req,res){
 
 exports.checkAuth = function(req, res, next) {
     if(req.session.user && req.session.user.isAuthenticated){
+        console.log(req.session);
         next();
     }else{
         res.redirect('/');
@@ -172,83 +176,46 @@ exports.loginPage = function(req, res){
             title: "User List",
     });
 }
-// exports.login = function(req, res){
-//     User.find(
-//         {userName: req.body.userName}
-//     ).exec(function(err, _user){
-//         if(err) console.log(err);
-//         //console.log(_user);
-//         for(var i = 0; i < _user.length; i++){
-//             User.findById(_user[i].id, function(err, user){
-//                 if(err) console.log(err);
-//                 console.log(req.body.password, user.password);
-//                 if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
-//                     console.log("Logged In");
-//                 }
-//             })
 
-//         }
-
-//     });
-//     res.redirect("/login");
-// }
-
-var ourUser = null;
-// exports.login = function(req, res){
-
-//     User.find(
-//         {userName: req.body.userName}
-//     ).exec(function(err, _user){
-//         if(err) console.log(err);
-//         //console.log(_user);
-//         for(var i = 0; i < _user.length; i++){
-//             User.findById(_user[i].id, function(err, user){
-//                 if(err) console.log(err);
-//                 if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
-//                     console.log("Logged In");
-//                     ourUser = user;
-//                 }
-//                 // else{
-//                     //     res.redirect("/login");
-//                     // }
-//                 })
-//                 console.log(ourUser);
-//                 if(ourUser != null){
-//                     break;
-//                 }
-                
-//             }
-
-//     });
-//     if(ourUser != null)
-//     {
-//         req.session.user={
-//             isAuthenticated: true,
-//             username: ourUser.userName
-//         };
-//         console.log(ourUser);
-//     }
-//     res.redirect("/private");
-// }
-
-exports.login = function(req, res){
-
-User.findOne(
-    {userName: req.body.userName}, function(err, user){
+exports.login = (req, res) =>{
+    let tryLogin = {
+        username:req.body.username,
+        pass:req.body.password
+    };
+    User.findOne({userName: req.body.userName}, function(err, account){
+        console.log(account);
         if(err) return console.log(err);
-        if(user != null){
-            if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
+        if(account != null){
+            let pHash = account.password;
+            console.log("Here");
+            if(bCrypt.compareSync(req.body.password, pHash)){
+                console.log("login");
                 req.session.user={
-                isAuthenticated: true,
-                username: user.userName
-                 };
-                 res.redirect("/private");
+                    isAuthenticated: true,
+                    userID: account.userID,
+                    username: account.userName,
+                    isAdmin: account.isAdmin
+                };
+                res.redirect('/private');
+            }
+            else{
+                res.render('login',{
+                    title: "Login",
+                    errorMessage:"Invalid Password",
+                    username:req.session.username
+                });
             }
         }
-
-});
-    res.redirect("/private");
+       else{
+        res.render('login',{
+            title: "Login",
+            errorMessage:"Account Not Found",
+            username:req.session.username
+        });
+       }
+    });
 }
+
 
 exports.createPostPage = function(req,res){
     User.findById(req.params.id, function(err, user){
