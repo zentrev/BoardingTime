@@ -6,6 +6,7 @@ var bodyParser = require("body-parser");
 var expressSession = require('express-session');
 var bCrypt = require("bcrypt-nodejs");
 
+
 var app = express();
 
 app.set("view engine", "pug");
@@ -21,9 +22,13 @@ app.use(expressSession({
 
 var urlencodedParser = bodyParser.urlencoded({
     extended: true
-})
+});
+
 
 app.get("/", route.index);
+app.get("/index", route.index);
+
+app.get("/data", route.data);
 
 app.get("/createUser", route.createUserPage);
 app.post("/createUser", urlencodedParser, route.createUser);
@@ -31,7 +36,7 @@ app.post("/createUser", urlencodedParser, route.createUser);
 app.get("/editUser/:id", route.editUserPage);
 app.post("/editUser/:id", urlencodedParser, route.editUser);
 
-app.get("/deleteUser/:id", route.deleteUser);
+app.get("/deleteUser/:page-:id", route.deleteUser);
 
 app.get("/login", route.loginPage)
 app.post("/login", urlencodedParser, route.login);

@@ -1,10 +1,10 @@
 extends layout
 block content
     form(id="form", method="post", action="/login")
-        lable Username:
-        input(type="text", name="userName")
+        label Username:
+        input(class="textBox", type="text", name="userName")
         br
-        lable Password:
-        input(type="text", name="password")
+        label Password:
+        input(class="textBox", type="text", name="password")
         br
-        input(type="submit", value="Login")
+        input(class="textBox", type="submit", value="Login")

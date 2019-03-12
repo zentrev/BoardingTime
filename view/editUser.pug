@@ -1,25 +1,36 @@
 extends layout
 block content
     form(id="form", method="post", action="/editUser/" + user.id)
-        lable UserName:
-        input(type="text", name="userName", value = user.userName)
+        label UserName:
+        input(class="textBox", type="text", name="userName", value = user.userName)
         br
-        lable Password:
-        input(type="text", name="password", value = user.password)
+
+        label Password:
+        input(class="textBox", type="text", name="password", value = user.password)
         br
-        label Privlage:
-        select(name="isAdmin")
-            option(select = user.isAdmin) #{user.isAdmin}
-            option(value="true") Admin
-            option(value="false") User
+
+        label Avatar:
+        input(class="textBox", type="text", name="avatar", value = user.avatar)
         br
-        lable Avatar:
-        input(type="text", name="avatar", value = user.avatar)
+
+        label email:
+        input(class="textBox", type="text", name="email", value = user.email)
         br
+
+        label age:
+        input(class="textBox", type="text", name="age", value = user.age)
+        br
+
+        if(user.isAdmin)
+            label Privlage:
+            select(class="textBox", name="isAdmin")
+                option(select = user.isAdmin) #{user.isAdmin}
+                option(value="true") Admin
+                option(value="false") User
+            br
+
         lable email:
         input(type="text", name="email", value = user.email)
         br
         lable age:
         input(type="text", name="age", value = user.age)
-        br
-        input(type="submit", value="Update User")

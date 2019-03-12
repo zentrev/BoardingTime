@@ -1,57 +1,14 @@
 extends layout
 
 block content
-    p Session = #{session.user.username}
-    table(class="gridtable")
-        tr
-            th ID
-            th Username
-            th Password
-            th Is Admin
-            th avatar
-            th Email
-            th Age
-            th
-            th
-            th
-        each item in user
-            tr
-                td 
-                    a(href="/details/" + item.id) #{item.id}
-                td #{item.userName}
-                td #{item.password}
-                td #{item.isAdmin}
-                td #{item.avatar}
-                td #{item.email}
-                td #{item.age}
-                td 
-                    a(href="/editUser/" + item.id) Edit
-                td 
-                    a(href="/deleteUser/" + item.id) Delete
-                td 
-                    a(href="/createPost/" + item.id) Post
-    a(href="/createUser") Add new user
-
-    table(class="gridtable")
-        tr
-            th ID
-            th UserID
-            th Username
-            th UserAvi
-            th Date
-            th Message
-            th
-            th
-        each item in post
-            tr
-                td 
-                    a(href="/details/" + item.id) #{item.id}
-                td #{item.ownerID}
-                td #{item.ownerName}
-                td #{item.ownerAvatar}
-                td #{item.date}
-                td #{item.message}
-                td 
-                    a(href="/editPost/" + item.id) Edit
-                td 
-                    a(href="/deletePost/" + item.id) Delete
+    a(href="/data", class="button") data
+    each item in post
+        div(class="post")
+            if(item.ownerID == "5c76dbf6df52e41a58ef8d75")
+                a(href="/editPost/" + item.id) Edit
+            if(item.ownerID == "5c76dbf6df52e41a58ef8d75")
+                a(href="/deletePost/" + item.id) delete
+            p #{item.ownerName}
+            img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
+            p #{item.date}
+            p #{item.message}

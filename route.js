@@ -12,12 +12,6 @@ mdb.once("open", function(callback){
 
 });
 
-var personSchema = mongoose.Schema({
-    name: String,
-    age: String,
-    species: String
-});
-
 var userSchema = mongoose.Schema({
     userName: String,
     password: String,
@@ -25,7 +19,9 @@ var userSchema = mongoose.Schema({
     avatar: String,
     email: String,
     age: String,
+    postCount: String,
 });
+
 var User = mongoose.model("Users", userSchema);
 
 var postSchema = mongoose.Schema({
@@ -51,6 +47,19 @@ exports.index = function(req,res){
         Post.find(function(err, post){
             if(err) return console.error(err);
             res.render("index", {
+                title: "Posting Board",
+                post: post.reverse()
+            });
+        });
+    });
+}
+
+exports.data = function(req,res){
+    User.find(function(err, user){
+        if(err) return console.error(err);
+        Post.find(function(err, post){
+            if(err) return console.error(err);
+            res.render("data", {
                 title: "Database",
                 user: user,
                 post: post,
@@ -71,10 +80,11 @@ exports.createUser = function(req,res){
     var user = new User({
         userName: req.body.userName,
         password: req.body.password,
-        isAdmin: req.body.isAdmin,
-        avatar: req.body.avatar,
+        isAdmin: false,
+        avatar: "",
         email: req.body.email,
         age: req.body.age,
+        postCount: 0
     });
     bCrypt.hash(req.body.password, null, null, function(err, hash){
         user.password = hash;
@@ -84,7 +94,7 @@ exports.createUser = function(req,res){
             console.log(user.userName + " added");
         });
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 function ComparePassword(pass, hash){
@@ -110,7 +120,7 @@ exports.editUser = function(req,res){
 
         //Find user post and change data
         Post.find(
-            { ownerID : user.id }
+            { ownerID : user.id },
          ).exec(function(err, results) {
             for (var i in results){
                 results[i].ownerName = req.body.userName;
@@ -125,7 +135,6 @@ exports.editUser = function(req,res){
         user.userName = req.body.userName;
         user.password = req.body.password;
         user.isAdmin = req.body.isAdmin;
-        user.avatar = req.body.avatar;
         user.email = req.body.email;
         user.age = req.body.age;
         user.save(function(err, user){
@@ -133,17 +142,18 @@ exports.editUser = function(req,res){
             console.log(user.userName + " Updated");
         });
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 exports.deleteUser = function(req,res){
+    console.log(req.params);
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);
 
         //Find user post and change data
         Post.find(
             { ownerID : user.id }
-        ).exec(function(err, results) {
+            ).exec(function(err, results) {
             for (var i in results){
                 results[i].ownerName = "Redacted";
                 results[i].ownerAvatar = "RedactedAvi";
@@ -157,7 +167,7 @@ exports.deleteUser = function(req,res){
 
     User.findByIdAndRemove(req.params.id, function(err, user){
         if(err) return console.error(err);
-        res.redirect("/");
+        res.redirect("/" +  req.params.page);
     });
 }
 
@@ -228,18 +238,25 @@ exports.createPostPage = function(req,res){
 }
 
 exports.createPost = function(req,res){
+    User.findById(req.body.ownerID, function(err, user){
+        user.postCount = parseInt(user.postCount) + 1;
+        console.log(user.postCount);
+        user.save(function(err, user){
+            if(err) return console.log(err);
+        });
+    });
+
     var post = new Post({
         ownerID: req.body.ownerID,
         ownerName: req.body.ownerName,
         ownerAvatar: req.body.ownerAvatar,
-        date: req.body.date,
+        date: new Date(Date.now()).toLocaleString(),
         message: req.body.message,
     });
     post.save(function(err, post){
         if(err) return console.error(err);
-        console.log(GetUser(post.owner).userName + " Post");
     });
-    res.redirect("/");
+    res.redirect("/data");
 }
 
 exports.editPostPage = function(req,res){
@@ -258,7 +275,6 @@ exports.editPost = function(req,res){
         post.ownerID = req.body.ownerID;
         post.ownerName = req.body.ownerName;
         post.ownerAvatar = req.body.ownerAvatar;
-        post.date = req.body.date;
         post.message = req.body.message;
         
         post.save(function(err, post){
@@ -272,7 +288,15 @@ exports.editPost = function(req,res){
 exports.deletePost = function(req,res){
     Post.findByIdAndRemove(req.params.id, function(err, post){
         if(err) return console.error(err);
-        res.redirect("/");
+        User.findById(post.ownerID, function(err, user){
+            if(err) return console.err(err);
+            user.postCount = parseInt(user.postCount) - 1;
+            user.save(function(err, user){
+                if(err) console.log(err);
+                console.log(user.postCount);
+            });
+        });
+        res.redirect("/data");
     });
 }
    
