@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var bCrypt = require("bcrypt-nodejs");
+var expressSession = require("express-session");
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/data", {
     useNewUrlParser: true
@@ -72,11 +73,21 @@ exports.createUser = function(req,res){
         email: req.body.email,
         age: req.body.age,
     });
-    user.save(function(err, user){
-        if(err) return console.error(err);
-        console.log(user.userName + " added");
+    bCrypt.hash(req.body.password, null, null, function(err, hash){
+        user.password = hash;
+
+        user.save(function(err, user){
+            if(err) return console.error(err);
+            console.log(user.userName + " added");
+        });
     });
     res.redirect("/");
+}
+
+function ComparePassword(pass, hash){
+    bCrypt.compare(pass, hash, function(err, res){
+        console.log(pass, hash);
+    });
 }
 
 //EDIT
@@ -147,60 +158,98 @@ exports.deleteUser = function(req,res){
     });
 }
 
+
+exports.checkAuth = function(req, res, next) {
+    if(req.session.user && req.session.user.isAuthenticated){
+        next();
+    }else{
+        res.redirect('/');
+    }
+}
+
 exports.loginPage = function(req, res){
         res.render("login", {
             title: "User List",
     });
 }
+// exports.login = function(req, res){
+//     User.find(
+//         {userName: req.body.userName}
+//     ).exec(function(err, _user){
+//         if(err) console.log(err);
+//         //console.log(_user);
+//         for(var i = 0; i < _user.length; i++){
+//             User.findById(_user[i].id, function(err, user){
+//                 if(err) console.log(err);
+//                 console.log(req.body.password, user.password);
+//                 if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
+//                     console.log("Logged In");
+//                 }
+//             })
+
+//         }
+
+//     });
+//     res.redirect("/login");
+// }
+
+var ourUser = null;
+// exports.login = function(req, res){
+
+//     User.find(
+//         {userName: req.body.userName}
+//     ).exec(function(err, _user){
+//         if(err) console.log(err);
+//         //console.log(_user);
+//         for(var i = 0; i < _user.length; i++){
+//             User.findById(_user[i].id, function(err, user){
+//                 if(err) console.log(err);
+//                 if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
+//                     console.log("Logged In");
+//                     ourUser = user;
+//                 }
+//                 // else{
+//                     //     res.redirect("/login");
+//                     // }
+//                 })
+//                 console.log(ourUser);
+//                 if(ourUser != null){
+//                     break;
+//                 }
+                
+//             }
+
+//     });
+//     if(ourUser != null)
+//     {
+//         req.session.user={
+//             isAuthenticated: true,
+//             username: ourUser.userName
+//         };
+//         console.log(ourUser);
+//     }
+//     res.redirect("/private");
+// }
 
 exports.login = function(req, res){
-    User.findOne(
-        {userName: req.body.userName},
-        {password: req.body.password}
-        ).exec(function(err, _user){
+
+User.findOne(
+    {userName: req.body.userName}, function(err, user){
         if(err) return console.log(err);
-        console.log(_user);
-        User.findById(_user.id, function(err, user){
-            if(err) return console.log(err);
-            if(user.userName === req.body.userName && user.password === req.body.password){
-                console.log("Logged in");
+        if(user != null){
+            if(user.userName === req.body.userName && bCrypt.compareSync(req.body.password, user.password)){
+                req.session.user={
+                isAuthenticated: true,
+                username: user.userName
+                 };
+                 res.redirect("/private");
             }
-        })
-    });
-    res.redirect("/");
+        }
+
+});
+    res.redirect("/private");
 }
 
-userSchema.statics.authenticate = function(userName, password, callback){
-    User.findOne({userName: userName}).exec(function(err, user){
-        if(err) {
-            return callback(err)
-        }
-        else if(!user){
-            var err = new Error("User not found");
-            err.status = 401;
-            return callback(err);
-        }
-        bCrypt.compare(password, user.password, function(err, result){
-            if(result === true){
-                return callback(null, user);
-            }
-            else{
-                return callback();
-            }
-        })
-    });
-}
-
-userSchema.pre('save', function (next) {
-    var user = this;
-    bcrypt.hash(user.password, 10, function (err, hash){
-      if (err) {
-        return next(err);
-      }
-      user.password = hash;
-      next();
-    })
-  });
 exports.createPostPage = function(req,res){
     User.findById(req.params.id, function(err, user){
         if(err) return console.error(err);

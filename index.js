@@ -3,13 +3,20 @@ var pug = require("pug");
 var path = require("path");
 var route = require("./route.js");
 var bodyParser = require("body-parser");
-var session = require('express-session');
+var expressSession = require('express-session');
+var bCrypt = require("bcrypt-nodejs");
 
 var app = express();
 
 app.set("view engine", "pug");
 app.set("views", __dirname+"/view");
 app.use(express.static(path.join(__dirname+"/public")));
+
+app.use(expressSession({
+    secret: 'Working',
+    saveUninitialized: false,
+    resave: true
+}));
 
 var urlencodedParser = bodyParser.urlencoded({
     extended: true
@@ -28,11 +35,9 @@ app.get("/deleteUser/:id", route.deleteUser);
 app.get("/login", route.loginPage)
 app.post("/login", urlencodedParser, route.login);
 
-// app.use(session({
-//     secret: 'Working',
-//     resave: true,
-//     saveUninitialized: false
-// }));
+app.get("/private", route.checkAuth, function(req, res){
+    res.render('private');
+  });
 
 app.get("/createPost/:id", route.createPostPage);
 app.post("/createPost/:id", urlencodedParser, route.createPost);
