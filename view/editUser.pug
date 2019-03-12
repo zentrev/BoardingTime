@@ -21,12 +21,14 @@ block content
         input(class="textBox", type="text", name="age", value = user.age)
         br
 
-        label Privlage:
-        select(class="textBox", name="isAdmin")
-            option(select = user.isAdmin) #{user.isAdmin}
-            option(value="true") Admin
-            option(value="false") User
-        br
+        if(user.isAdmin)
+            label Privlage:
+            select(class="textBox", name="isAdmin")
+                option(select = user.isAdmin) #{user.isAdmin}
+                option(value="true") Admin
+                option(value="false") User
+            br
+
         lable email:
         input(type="text", name="email", value = user.email)
         br

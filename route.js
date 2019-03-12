@@ -14,12 +14,6 @@ mdb.once("open", function(callback){
 
 });
 
-var personSchema = mongoose.Schema({
-    name: String,
-    age: String,
-    species: String
-});
-
 var userSchema = mongoose.Schema({
     userName: String,
     password: String,
@@ -29,6 +23,7 @@ var userSchema = mongoose.Schema({
     age: String,
     postCount: String,
 });
+
 var User = mongoose.model("Users", userSchema);
 
 var postSchema = mongoose.Schema({
@@ -84,7 +79,7 @@ exports.createUser = function(req,res){
     var user = new User({
         userName: req.body.userName,
         password: req.body.password,
-        isAdmin: req.body.isAdmin,
+        isAdmin: false,
         avatar: "",
         email: req.body.email,
         age: req.body.age,
