@@ -112,4 +112,10 @@ label
     border-radius: 10px;
     border: #fff;
 
+    background-color: #2d2d2d;
+}
+
+#users{
+    visibility: hidden;
+    font-size: 0px;
 }

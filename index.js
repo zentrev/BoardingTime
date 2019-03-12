@@ -43,7 +43,6 @@ app.post("/login", urlencodedParser, route.login);
 
 app.get("/private", route.checkAuth, function(req, res){
     res.render('private');
-    
   });
 
 app.get('/logout', function(req, res){
@@ -62,7 +61,7 @@ app.post("/createPost/:id", urlencodedParser, route.createPost);
 app.get("/editPost/:id", route.editPostPage);
 app.post("/editPost/:id", urlencodedParser, route.editPost);
 
-app.get("/deletePost/:id", route.deletePost);
+app.get("/deletePost/:page-:id", route.deletePost);
 
 
 app.listen(3000);
