@@ -109,7 +109,7 @@ exports.createUser = function(req,res){
             console.log(user.userName + " added");
         });
     });
-    res.redirect("/data");
+    res.redirect("/index");
 }
 
 function ComparePassword(pass, hash){
@@ -278,7 +278,7 @@ exports.createPost = function(req,res){
         });
     });
 
-    res.redirect("/data");
+    res.redirect("/index");
 }
 
 exports.editPostPage = function(req,res){

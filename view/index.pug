@@ -1,12 +1,11 @@
 extends layout
 
 block content
-
     if(session.user != null)
         p Session = #{session.user.userName}
         a(href="/logout", class="button") Logout
         a(href="/editUser/" + session.user.userID, class="button") Edit Profile
-
+        a(href="/createPost/" + session.user.userID, class="button") Make Post
         if(session.user.isAdmin == 'true')
             a(href="/data", sclass="button") data
     else
@@ -15,9 +14,9 @@ block content
         div(class="post")
         if(session.user != null)
             if(item.ownerID == session.user.userID)
-                a(href="/editPost/" + item.id) Edit
+                a(href="/editPost/" + item.id, class="button") Edit
             if(session.user.userID == item.ownerID || session.user.isAdmin == 'true')
-                a(href="/deletePost/data-" + item.id) delete
+                a(href="/deletePost/data-" + item.id, class="button") delete
         p #{item.ownerID}
         p #{item.ownerName}
         img(src="profiles/" + item.ownerAvatar, alt=item.ownerName)
